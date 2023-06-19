@@ -1,18 +1,28 @@
-const express    = require('express');
-const app        = express();
-const Pokemon    = require('./models/pokedex.js');
 
+require("dotenv").config()
+const express = require('express');
+const Pokemon = require('./models/pokedex.js');
+const morgan = require('morgan')
 
-// INDEX
+const pokemonRouter = require('./controllers/pokedex.js')
+
+// app object
+const app = express();
+
+app.set('view engine', 'ejs');
+
+// middleware
+app.use(morgan("tiny"))
+
+app.use("/pokemon", pokemonRouter)
+
+// initial test
 app.get('/', (req, res) => {
-res.render('../views/pokedex/index.ejs', { data: Pokemon });
+    res.render("you hit the server js route");
 });
 
 
-// SHOW
-app.get('/:id', (req, res) => {
-res.render('../views/pokedex/show.ejs', { data: Pokemon[req.params.id] });
-});
+
 
 app.listen(3000, () => {
     console.log(`Listening on Port 3000`)
